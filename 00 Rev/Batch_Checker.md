@@ -44,4 +44,4 @@ print(''.join(results))
 띄워쓰기가 짤리긴 했는데 읽는데 큰 지장은 없다.<br>
 `echo off if FLAG == BA7cH_cAN_hiDe_u5iNg_text echo correct else echo wrong pause`
 
-## flag : BA7cH_cAN_hiDe_u5iNg_text
+## flag : DH{BA7cH_cAN_hiDe_u5iNg_text}
