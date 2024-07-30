@@ -1,4 +1,4 @@
-# blind_sqli
+# sqli3 - blind sqli + bypass filtering
 - 난이도 : 중
 - site : 금융보안원
 ## 풀이

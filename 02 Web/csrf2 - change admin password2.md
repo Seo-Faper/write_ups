@@ -1,4 +1,4 @@
-# csrf2
+# csrf2 - change admin password2
 - 난이도 : 중
 - site : 금융보안원
 ## 풀이
