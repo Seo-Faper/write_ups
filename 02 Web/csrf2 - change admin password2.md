@@ -69,7 +69,7 @@ fetch(`/changepw`)
 그럼 이 payload를 어떻게 우회해서 심을 것인가
 ```html
 <script>
-    self[`ev`+`al`](btoa(`base64로인코딩된payload`));
+    self[`ev`+`al`](atob(`base64로인코딩된payload`));
 </script>
 ```
 이렇게 하게 되면 base64로 인코딩된 payload가 btoa에 의해 다시 정상 자바스크립트로 풀리게 되고 그걸 eval이 실행해 해당 payload가 실행되게 된다.
