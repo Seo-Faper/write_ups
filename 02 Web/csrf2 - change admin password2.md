@@ -1,5 +1,5 @@
 # csrf2 - change admin password2
-- 난이도 : 중
+- 난이도 : basic
 - site : 금융보안원
 ## 풀이
 ```py
