@@ -1,5 +1,5 @@
 # sqli3 - blind sqli + bypass filtering
-- 난이도 : 중
+- 난이도 : basic
 - site : 금융보안원
 ## 풀이
 ```py
