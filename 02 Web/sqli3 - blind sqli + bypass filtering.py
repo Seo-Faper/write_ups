@@ -23,3 +23,5 @@ for cnt in range(1,100):
             cnt_use = True
             break
     print(cnt,cnt_use)
+
+근데 이렇게 풀면 몇몇 특수문자가 무시된다. 특히 + 나 숫자는 URL의 고유한 값이라서 따로 처리가 되지 않는다.
