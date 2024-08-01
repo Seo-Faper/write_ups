@@ -1,4 +1,5 @@
 from pwn import *
+
 p = remote('fsi.zzado.kr',7772)
 p.recvuntil(b"============= Game Start =============\n")
 for i in range(20):

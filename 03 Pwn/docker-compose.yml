@@ -1,0 +1,17 @@
+
+services:
+    pwn:
+        platform: linux/amd64
+        container_name: pwn
+        image: zzado/pwn:academy
+        cap_add:
+            - SYS_PTRACE
+        security_opt:
+            - seccomp:unconfined
+        working_dir : /probs/
+        ports:
+            - "23946:23946"
+        volumes:
+            - ./:/probs/
+        #stdin_open: true
+        tty: true
