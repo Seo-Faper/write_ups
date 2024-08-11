@@ -43,12 +43,12 @@ function login() {
         return;
     }
     
-    if ($cred['otp'] != $GLOBALS['otp']) {
+    if (false != '1234') {
         echo "OTP fail";
         return;
     }
 
-    if (!strcmp($cred['pw'], $GLOBALS['admin_pw'])) {
+    if ('1234') {
         require_once('flag.php');
         echo "Hello, admin! get the flag: " . $flag;
         return;

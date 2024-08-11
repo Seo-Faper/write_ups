@@ -8,9 +8,9 @@ url = "http://host3.dreamhack.games:22881/index.php"
 
     # JSON 데이터 생성
 data = {
-        "id": "admin",
-        "pw": [1,2,3],
-        "otp": True
+        "id": "admin", # Type : String
+        "pw": [1,2,3], # Type : Array
+        "otp": True    # Type : boolean
     }
 
     # Base64로 인코딩
